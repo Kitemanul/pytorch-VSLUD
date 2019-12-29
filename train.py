@@ -14,8 +14,8 @@ random.seed(time.time())
 
 
 print("loading training data...")
-video = torch.load("datasets/video_frame_pool5.tar")
-summary = torch.load("datasets/summary_frame_pool5.tar")
+video = torch.load("datasets/reorganized_training_dataset_summe_video.tar")
+summary = torch.load("datasets/reorganized_training_dataset_summe_summary.tar")
 print("loading training data ended")
 
 PATH_record = "saved_models/loss_record_3.tar"
@@ -101,8 +101,11 @@ def weights_init(m):
                 init.normal_(param.data)
 
 
-S_K = SK_test().to(device)
-S_D = SD_test().to(device)
+#S_K = SK_test().to(device)
+#S_D = SD_test().to(device)
+
+S_K = SK().to(device)
+S_D = SD().to(device)
 
 
 optimizerS_K = optim.Adam(S_K.parameters(), lr=1e-5)
@@ -188,20 +191,26 @@ for epoch in range(EPOCH):
     scheduler_S_K.step()
     scheduler_S_D.step()
 
-
     tqdm_range = tqdm.trange(len(video["feature"]))
     for i in tqdm_range: # video["feature"] -> [[1,1024,1,A], [1,1024,1,B]...]
         tqdm_range.set_description(" Epoch: {:0>5d}, Running current iter {:0>3d} ...".format(epoch+1, i+1))
 
-        vd = video["feature"][i]
-        sd = summary["feature"][i]
+        #1*1024*1*174
+        vd = video["feature"][i].to(device)
+
+        #1*1024*1*6
+        sd = summary["feature"][i].to(device)
 
         ##############
         # update S_K #
         ##############
+        #clear grad
         S_K.zero_grad()
 
         #S_K_summary,column_mask = S_K(vd)
+        # 1*1024*1*174
+        # 1*1*1*174
+        
         S_K_summary,index_mask,_ = S_K(vd)
         output = S_D(S_K_summary)
         label = torch.full((1,), 1, device=device)
@@ -314,6 +323,7 @@ for epoch in range(EPOCH):
         S_D.zero_grad()
 
         # real summary #
+        #sd:1*1024*1*10
         output = S_D(sd)
         label.fill_(1)
         err_S_D_real = criterion(output, label)

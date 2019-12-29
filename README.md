@@ -39,7 +39,7 @@ Sorry for my poor coding, I am new to pytorch and deep learning.
 The loss curves above are not reasonable during GAN training.
 
 "The decoder of FCSN consists of several temporal deconvolution operations which produces a vector of prediction scores with the same length as the input video. Each score indicates the likelihood of the corresponding frame being a key frame or non-key frame. Based on these scores, we select k key frames to form the predicted summary video." -> found in the paper Video
-[Summarization by Learning from Unpaired Data(CVPR2019)](http://openaccess.thecvf.com/content_CVPR_2019/papers/Rochan_Video_Summarization_by_Learning_From_Unpaired_Data_CVPR_2019_paper.pdf)
+[nctu](http://openaccess.thecvf.com/content_CVPR_2019/papers/Rochan_Video_Summarization_by_Learning_From_Unpaired_Data_CVPR_2019_paper.pdf)
 
 I implement "we select k key frames to form the predicted summary video" by [torch.index_select(input, dim, index, out=None)](https://pytorch.org/docs/stable/torch.html)
 

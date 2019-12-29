@@ -12,7 +12,8 @@ device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 # only train for summe first
 create_evaluation_dataset = "summe"
 
-dir_base = "datasets"
+#absolute dir
+dir_base = "/home/ubuntu/wh/pytorch-VSLUD/datasets"
 file_training_video = "{}/reorganized_training_dataset_{}_video.tar".format(dir_base, create_evaluation_dataset)
 file_training_summary = "{}/reorganized_training_dataset_{}_summary.tar".format(dir_base, create_evaluation_dataset)
 
@@ -21,6 +22,7 @@ dataset_name_list = ["summe", "tvsum", "youtube", "ovp"]
 dataset_reorganized = collections.OrderedDict()
 
 for dataset_name in dataset_name_list:
+
     dataset = h5py.File("{}/eccv16_dataset_{}_google_pool5.h5".format(dir_base,dataset_name), 'r')
     keys = list(dataset.keys())
     
